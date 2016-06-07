@@ -2897,10 +2897,13 @@ tcp-backlog <%= @conf_tcp_backlog %>
 # on a unix socket when not specified.
 #
 # unixsocket /tmp/redis.sock
- 
-<%- if @conf_unixsocket -%> unixsocket <%= @conf_unixsocket %> <%- end -%>
-# unixsocketperm 700
-<%- if @conf_unixsocketperm -%> unixsocketperm <%= @conf_unixsocketperm %> <%- end -%>
+<%- if @conf_unixsocket -%>
+unixsocket <%= @conf_unixsocket %>
+<%- end -%>
+# unixsocketperm 755
+<%- if @conf_unixsocketperm -%>
+unixsocketperm <%= @conf_unixsocketperm %>
+<%- end -%>
  
 # Close the connection after a client is idle for N seconds (0 to disable)
 <%- if @conf_timeout -%>
@@ -2938,15 +2941,10 @@ daemonize <%= @conf_daemonize %>
 #   supervised no      - no supervision interaction
 #   supervised upstart - signal upstart by putting Redis into SIGSTOP mode
 #   supervised systemd - signal systemd by writing READY=1 to $NOTIFY_SOCKET
-#   supervised auto    - detect upstart or systemd
-Accept connections on the specified port
-method based on
+#   supervised auto    - detect upstart or systemd method based on
 #                        UPSTART_JOB or NOTIFY_SOCKET environment variables
 # Note: these supervision methods only signal "process is ready."
-#       They do not enable continuous liveness
-Specify the server verbosity level
-pings back to your supervisor.
-supervised no
+#       They do not enable continuous liveness pings back to your supervisor.
  
 # If a pid file is specified, Redis writes it where specified at startup
 # and removes it at exit.
