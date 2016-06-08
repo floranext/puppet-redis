@@ -47,7 +47,7 @@ class redis (
   $conf_daemonize                         = 'yes',
   $conf_databases                         = '16',
   $conf_dbfilename                        = 'dump.rdb',
-  $conf_dir                               = '/var/lib/redis/',
+  $conf_dir                               = undef, # added to disable rdb at all
   $conf_glueoutputbuf                     = undef,
   $conf_hash_max_zipmap_entries           = '512',
   $conf_hash_max_zipmap_value             = '64',
@@ -175,7 +175,6 @@ class redis (
     hasrestart => true,
     hasstatus  => true,
     require    => [ Package['redis'],
-                    Exec[$conf_dir],
                     File[$conf_redis] ],
   }
 
@@ -196,23 +195,25 @@ class redis (
     mode    => '0644',
   }
 
-  exec { $conf_dir:
-    path    => '/bin:/usr/bin:/sbin:/usr/sbin',
-    command => "mkdir -p ${conf_dir}",
-    user    => root,
-    group   => root,
-    creates => $conf_dir,
-    before  => Service['redis'],
-    require => Package['redis'],
-  }
+  if $conf_dir {
+    exec { $conf_dir:
+      path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+      command => "mkdir -p ${conf_dir}",
+      user    => root,
+      group   => root,
+      creates => $conf_dir,
+      before  => Service['redis'],
+      require => Package['redis'],
+    }
 
-  file { $conf_dir:
-    ensure  => directory,
-    owner   => redis,
-    group   => redis,
-    mode    => '0755',
-    before  => Service['redis'],
-    require => Exec[$conf_dir],
+    file { $conf_dir:
+      ensure  => directory,
+      owner   => redis,
+      group   => redis,
+      mode    => '0755',
+      before  => Service['redis'],
+      require => Exec[$conf_dir],
+    }
   }
 
   if ( $system_sysctl == true ) {
@@ -224,8 +225,6 @@ class redis (
   }
 
   if $service_restart == true {
-    # https://github.com/fsalum/puppet-redis/pull/28
-    Exec[$conf_dir] ~> Service['redis']
     File[$conf_redis] ~> Service['redis']
   }
 
