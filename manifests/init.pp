@@ -26,6 +26,7 @@
 #
 class redis (
   $conf_activerehashing                   = 'yes',
+  $conf_aof_load_truncated                = 'yes', # 3.2+
   $conf_aof_rewrite_incremental_fsync     = 'yes', # 2.6+
   $conf_append                            = {}, # hash of custom variables+values
   $conf_appendfilename                    = undef, # default appendonly.aof
@@ -37,6 +38,12 @@ class redis (
   $conf_client_output_buffer_limit_normal = '0 0 0', # 2.6+
   $conf_client_output_buffer_limit_pubsub = '32mb 8mb 60', # 2.6+
   $conf_client_output_buffer_limit_slave  = '256mb 64mb 60', # 2.6+
+  $conf_cluster_config_file               = undef, # 3.2+
+  $conf_cluster_enabled                   = undef, # 3.2+
+  $conf_cluster_migration_barrier         = undef, # 3.2+
+  $conf_cluster_node_timeout              = undef, # 3.2+
+  $conf_cluster_require_full_coverage     = undef, # 3.2+
+  $conf_cluster_slave_validity_factor     = undef, # 3.2+
   $conf_daemonize                         = 'yes',
   $conf_databases                         = '16',
   $conf_dbfilename                        = 'dump.rdb',
@@ -47,7 +54,10 @@ class redis (
   $conf_hll_sparse_max_bytes              = undef, # default 3000, 2.8.5?+
   $conf_hz                                = '10', # 2.6+
   $conf_include                           = [], # array of custom include files
+  $conf_latency_monitor_threshold         = '0', # 3.2+
+  $conf_list_compress_depth               = '0', # 3.2+
   $conf_list_max_ziplist_entries          = '512',
+  $conf_list_max_ziplist_size             = '-2', # 3.2+
   $conf_list_max_ziplist_value            = '64',
   $conf_logfile                           = undef, #default ""
   $conf_loglevel                          = 'notice',
@@ -64,11 +74,14 @@ class redis (
   $conf_notify_keyspace_events            = undef, # 2.8+
   $conf_pidfile                           = undef,
   $conf_port                              = '6379',
+  $conf_protected_mode                    = 'yes', # 3.2+
   $conf_rdbchecksum                       = 'yes', # 2.6+
   $conf_rdbcompression                    = 'yes',
   $conf_repl_backlog_size                 = '1mb', # 2,8+
   $conf_repl_backlog_ttl                  = '3600', # 2.8+
   $conf_repl_disable_tcp_nodelay          = 'no', # 2,6+
+  $conf_repl_diskless_sync                = 'no', # 3.2+
+  $conf_repl_diskless_sync_delay          = '5', # 3.2+
   $conf_repl_ping_slave_period            = '10', # 2.4+
   $conf_repl_timeout                      = '60', # 2.4+
   $conf_requirepass                       = undef,
@@ -81,6 +94,7 @@ class redis (
   $conf_slowlog_log_slower_than           = '10000',
   $conf_slowlog_max_len                   = '128',
   $conf_stop_writes_on_bgsave_error       = 'yes', # 2.6+
+  $conf_supervised                        = 'no',
   $conf_syslog_enabled                    = undef,
   $conf_syslog_facility                   = undef,
   $conf_syslog_ident                      = undef,

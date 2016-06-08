@@ -2871,7 +2871,9 @@ bind <%= @conf_bind %>
 # you are sure you want clients from other hosts to connect to Redis
 # even if no authentication is configured, nor a specific set of interfaces
 # are explicitly listed using the "bind" directive.
-protected-mode yes
+<%- if @conf_protected_mode -%>
+protected-mode <%= @conf_protected_mode %>
+<%- end -%>
  
 # Accept connections on the specified port, default is 6379 (IANA #815344).
 # If port 0 is specified Redis will not listen on a TCP socket.
@@ -2945,6 +2947,9 @@ daemonize <%= @conf_daemonize %>
 #                        UPSTART_JOB or NOTIFY_SOCKET environment variables
 # Note: these supervision methods only signal "process is ready."
 #       They do not enable continuous liveness pings back to your supervisor.
+<%- if @conf_supervised -%>
+supervised <%= @conf_supervised %>
+<%- end -%>
  
 # If a pid file is specified, Redis writes it where specified at startup
 # and removes it at exit.
@@ -3172,7 +3177,9 @@ slave-read-only <%= @conf_slave_read_only %>
 #
 # With slow disks and fast (large bandwidth) networks, diskless replication
 # works better.
-repl-diskless-sync no
+<%- if @conf_repl_diskless_sync -%>
+repl-diskless-sync <%= @conf_repl_diskless_sync %>
+<%- end -%>
  
 # When diskless replication is enabled, it is possible to configure the delay
 # the server waits in order to spawn the child that transfers the RDB via socket
@@ -3184,7 +3191,9 @@ repl-diskless-sync no
 #
 # The delay is specified in seconds, and by default is 5 seconds. To disable
 # it entirely just set it to 0 seconds and the transfer will start ASAP.
-repl-diskless-sync-delay 5
+<%- if @conf_repl_diskless_sync_delay -%>
+repl-diskless-sync-delay <%= @conf_repl_diskless_sync_delay %>
+<%- end -%>
  
 # Slaves send PINGs to server in a predefined interval. It's possible to change
 # this interval with the repl_ping_slave_period option. The default value is 10
@@ -3549,8 +3558,10 @@ auto-aof-rewrite-min-size <%= @conf_auto_aof_rewrite_min_size %>
 # the server will still exit with an error. This option only applies when
 # Redis will try to read more data from the AOF file but not enough bytes
 # will be found.
-aof-load-truncated yes
- 
+<%- if @conf_aof_load_truncated -%>
+aof-load-truncated <%= @conf_aof_load_truncated %>
+<%- end -%> 
+
 ################################ LUA SCRIPTING  ###############################
  
 # Max execution time of a Lua script in milliseconds.
@@ -3584,6 +3595,9 @@ lua-time-limit <%= @conf_lua_time_limit %>
 # cluster node enable the cluster support uncommenting the following:
 #
 # cluster-enabled yes
+<%- if @conf_cluster_enabled -%>
+cluster-enabled <%= @conf_cluster_enabled %>
+<%- end -%>
  
 # Every cluster node has a cluster configuration file. This file is not
 # intended to be edited by hand. It is created and updated by Redis nodes.
@@ -3592,12 +3606,18 @@ lua-time-limit <%= @conf_lua_time_limit %>
 # overlapping cluster configuration file names.
 #
 # cluster-config-file nodes-6379.conf
+<%- if @conf_cluster_config_file -%>
+cluster-config-file <%= @conf_cluster_config_file %>
+<%- end -%>
  
 # Cluster node timeout is the amount of milliseconds a node must be unreachable
 # for it to be considered in failure state.
 # Most other internal time limits are multiple of the node timeout.
 #
 # cluster-node-timeout 15000
+<%- if @conf_cluster_node_timeout -%>
+cluster-node-timeout <%= @conf_cluster_node_timeout %>
+<%- end -%>
  
 # A slave of a failing master will avoid to start a failover if its data
 # looks too old.
@@ -3643,6 +3663,9 @@ lua-time-limit <%= @conf_lua_time_limit %>
 # the cluster will always be able to continue.
 #
 # cluster-slave-validity-factor 10
+<%- if @conf_cluster_slave_validity_factor -%>
+cluster-slave-validity-factor <%= @conf_cluster_slave_validity_factor %>
+<%- end -%>
  
 # Cluster slaves are able to migrate to orphaned masters, that are masters
 # that are left without working slaves. This improves the cluster ability
@@ -3662,6 +3685,9 @@ lua-time-limit <%= @conf_lua_time_limit %>
 # in production.
 #
 # cluster-migration-barrier 1
+<%- if @conf_cluster_migration_barrier -%>
+cluster-migration-barrier <%= @conf_cluster_migration_barrier %>
+<%- end -%>
  
 # By default Redis Cluster nodes stop accepting queries if they detect there
 # is at least an hash slot uncovered (no available node is serving it).
@@ -3675,6 +3701,9 @@ lua-time-limit <%= @conf_lua_time_limit %>
 # option to no.
 #
 # cluster-require-full-coverage yes
+<%- if @conf_cluster_require_full_coverage -%>
+cluster-require-full-coverage <%= @conf_cluster_require_full_coverage %>
+<%- end -%>
  
 # In order to setup your cluster make sure to read the documentation
 # available at http://redis.io web site.
@@ -3726,7 +3755,9 @@ slowlog-max-len <%= @conf_slowlog_max_len %>
 # impact, that while very small, can be measured under big load. Latency
 # monitoring can easily be enabled at runtime using the command
 # "CONFIG SET latency-monitor-threshold <milliseconds>" if needed.
-latency-monitor-threshold 0
+<%- if @conf_latency_monitor_threshold -%>
+latency-monitor-threshold <%= @conf_latency_monitor_threshold %>
+<%- end -%>
  
 ############################# EVENT NOTIFICATION ##############################
  
@@ -3801,7 +3832,9 @@ list-max-ziplist-value <%= @conf_list_max_ziplist_value %>
 # per list node.
 # The highest performing option is usually -2 (8 Kb size) or -1 (4 Kb size),
 # but if your use case is unique, adjust the settings as necessary.
-list-max-ziplist-size -2
+<%- if @conf_list_max_ziplist_size -%>
+list-max-ziplist-size <%= @conf_list_max_ziplist_size %>
+<%- end -%>
  
 # Lists may also be compressed.
 # Compress depth is the number of quicklist ziplist nodes from *each* side of
@@ -3817,7 +3850,9 @@ list-max-ziplist-size -2
 #    but compress all nodes between them.
 # 3: [head]->[next]->[next]->node->node->...->node->[prev]->[prev]->[tail]
 # etc.
-list-compress-depth 0
+<%- if @conf_list_compress_depth -%>
+list-compress-depth <%= @conf_list_compress_depth %>
+<%- end -%>
  
 # Sets have a special encoding in just one case: when a set is composed
 # of just strings that happen to be integers in radix 10 in the range
