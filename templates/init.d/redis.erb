@@ -1,7 +1,7 @@
 #Configurations injected by install_server below....
 
 REDIS_PORT=<%= @conf_port %>
-REDIS_BIND_ADDRESS="<%= @bind_address %>"
+REDIS_BIND_ADDRESS="<%= @conf_bind %>"
 
 EXEC=<%= @redis_install_dir %>/bin/redis-server
 CLIEXEC="<%= @redis_install_dir %>/bin/redis-cli -h $REDIS_BIND_ADDRESS -p $REDIS_PORT"
