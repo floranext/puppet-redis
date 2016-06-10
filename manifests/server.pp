@@ -1,4 +1,4 @@
-class redis::server (
+define redis::server (
   $redis_name                             = $name,
   $conf_activerehashing                   = 'yes',
   $conf_aof_load_truncated                = 'yes', # 3.2+
@@ -142,7 +142,7 @@ class redis::server (
     name   => $package,
   }
 
-  service { 'redis-server_${redis_name}':
+  service { "redis-server_${redis_name}":
     ensure     => $service_ensure,
     name       => $service,
     enable     => $service_enable,
@@ -206,7 +206,7 @@ class redis::server (
   }
 
   if $service_restart == true {
-    File[$conf_redis] ~> Service['redis-server_${redis_name}']
+    File[$conf_redis] ~> Service["redis-server_${redis_name}"]
   }
 
 }

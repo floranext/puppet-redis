@@ -10,7 +10,7 @@ class redis::install(
   include gcc
   include wget
 
-  $conf_dir            = dirname($conf_loc)
+  $conf_dir            = "/etc/"
   $redis_tar           = "redis-${version}.tar.gz"
   $redis_pkg           = "${redis_dl_dir}/${redis_tar}"
 
