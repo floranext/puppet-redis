@@ -137,11 +137,6 @@ define redis::server (
     $conf_logfile_real = $::redis::params::logfile
   }
 
-  package { 'redis':
-    ensure => $package_ensure,
-    name   => $package,
-  }
-
   service { "redis-server_${redis_name}":
     ensure     => $service_ensure,
     name       => $service,
@@ -161,15 +156,15 @@ define redis::server (
     require => Package['redis'],
   }
 
-  file { "redis init ${conf_port}":
+  file { "redis init ${redis_name}":
     ensure  => present,
-    path    => "/etc/init.d/redis_${conf_port}",
+    path    => "/etc/init.d/redis_${redis_name}",
     mode    => '0755',
     content => template('redis/init.d/redis.erb'),
   }
 
-  file { $conf_logrotate:
-    path    => $conf_logrotate,
+  file { "${conf_logrotate}_${redis_name}":
+    path    => "${conf_logrotate}_${redis_name}",
     content => template('redis/logrotate.erb'),
     owner   => root,
     group   => root,
@@ -183,7 +178,7 @@ define redis::server (
       user    => root,
       group   => root,
       creates => $conf_dir,
-      before  => Service['redis'],
+      before  => Service['redis-server_${redis_name}'],
       require => Package['redis'],
     }
 
@@ -192,7 +187,7 @@ define redis::server (
       owner   => redis,
       group   => redis,
       mode    => '0755',
-      before  => Service['redis'],
+      before  => Service['redis-server_${redis_name}'],
       require => Exec[$conf_dir],
     }
   }
