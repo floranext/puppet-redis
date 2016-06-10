@@ -98,7 +98,7 @@ class redis::server (
 
   include redis::params
 
-  $conf_redis     = $redis::params::conf
+  $conf_redis = "/etc/redis_${redis_name}.conf"
   $conf_logrotate = $redis::params::conf_logrotate
 
   if $service_name {
@@ -106,7 +106,6 @@ class redis::server (
   }else{
     $service = $redis::params::service
   }
-
 
   if $redis_version_override {
     $redis_version_real = $redis_version_override
@@ -143,7 +142,7 @@ class redis::server (
     name   => $package,
   }
 
-  service { 'redis':
+  service { 'redis-server_${redis_name}':
     ensure     => $service_ensure,
     name       => $service,
     enable     => $service_enable,
@@ -160,6 +159,13 @@ class redis::server (
     group   => root,
     mode    => '0644',
     require => Package['redis'],
+  }
+
+  file { "redis init ${port}":
+    ensure  => present,
+    path    => "/etc/init.d/redis_${port}",
+    mode    => '0755',
+    content => template('redis/init.d/redis.erb'),
   }
 
   file { $conf_logrotate:
@@ -200,7 +206,7 @@ class redis::server (
   }
 
   if $service_restart == true {
-    File[$conf_redis] ~> Service['redis']
+    File[$conf_redis] ~> Service['redis-server_${redis_name}']
   }
 
 }
