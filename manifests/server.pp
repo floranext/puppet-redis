@@ -161,9 +161,9 @@ define redis::server (
     require => Package['redis'],
   }
 
-  file { "redis init ${port}":
+  file { "redis init ${conf_port}":
     ensure  => present,
-    path    => "/etc/init.d/redis_${port}",
+    path    => "/etc/init.d/redis_${conf_port}",
     mode    => '0755',
     content => template('redis/init.d/redis.erb'),
   }
